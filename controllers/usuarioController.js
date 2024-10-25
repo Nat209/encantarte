@@ -22,6 +22,26 @@ const crearUsuario = (req, res) => {
     });
 };
 
+const obtenerUsuarios = (req, res) => {
+    const rol = req.query.rol; // Obtener el tipo de la consulta
+
+    let query = 'SELECT id, nombre, email FROM usuarios';
+    const queryParams = [];
+
+    // Si hay un tipo especificado, ajustar la consulta
+    if (rol) {
+        query += ' WHERE rol = ?';
+        queryParams.push(rol);
+    }
+
+    db.query(query, queryParams, (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error al obtener productos', error: err });
+        }
+        res.json(results);
+    });
+};
+
 const autenticarUsuario = (req, res) => {
     const { email, password } = req.body;
 
@@ -45,4 +65,5 @@ const autenticarUsuario = (req, res) => {
 module.exports = {
     crearUsuario,
     autenticarUsuario,
+    obtenerUsuarios
 };
